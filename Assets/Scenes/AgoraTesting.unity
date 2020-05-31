@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -449,9 +449,6 @@ MonoBehaviour:
   grid: {fileID: 170532579}
   videoObject: {fileID: 5457164161197204247, guid: ea175fcc5bd74ee48a0c0213ada2c36f,
     type: 3}
-  button: {fileID: 201470826}
-  buttonText: {fileID: 1985945892}
-  textLog: {fileID: 353612215}
 --- !u!4 &1040100063
 Transform:
   m_ObjectHideFlags: 0

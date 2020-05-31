@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "com.google.firebase.analytics": "6.14.1",
-    "com.google.firebase.database": "6.14.1",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.ide.rider": "1.1.4",
     "com.unity.ide.vscode": "1.2.0",

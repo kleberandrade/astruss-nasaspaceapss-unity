@@ -61,13 +61,9 @@ public class VideoManager : MonoBehaviour
 
     private void LeaveChannel()
     {
-        playerVideos.Clear();
-
+        _mrRtcEngine.DisableVideoObserver();
+        playerVideos[_myId].Clear();
         _mrRtcEngine.LeaveChannel();
-        _mrRtcEngine.OnJoinChannelSuccess -= OnJoinChannelSuccess;
-        _mrRtcEngine.OnUserJoined -= OnUserJoined;
-        _mrRtcEngine.OnUserOffline -= OnUserOffline;
-        _mrRtcEngine.OnLeaveChannel -= OnLeaveChannel;
     }
     
     private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
@@ -97,10 +93,7 @@ public class VideoManager : MonoBehaviour
 
     private void OnLeaveChannel(RtcStats stats)
     {
-        _mrRtcEngine.DisableAudio();
-        playerVideos[_myId].Clear();
-        _mrRtcEngine.DisableVideoObserver();
-        SceneManager.LoadScene("Lobby");
+        Debug.Log("Leaving");
     }
 
     private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
@@ -111,27 +104,9 @@ public class VideoManager : MonoBehaviour
         Destroy(playerVideo.gameObject);
     }
 
-    // private void OnApplicationQuit()
-    // {
-    //         LeaveChannel();
-    //         _mrRtcEngine.DisableAudio();
-    //         _mrRtcEngine.DisableVideoObserver();
-    // }
-    //
-    // private void OnApplicationFocus(bool hasFocus)
-    // {
-    //     if (_mrRtcEngine == null) return;
-    //
-    //     if (hasFocus)
-    //     {
-    //         _mrRtcEngine.EnableVideoObserver();
-    //         _mrRtcEngine.EnableAudio();
-    //     }
-    //
-    //     else
-    //     {
-    //         _mrRtcEngine.DisableAudio();
-    //         _mrRtcEngine.DisableVideoObserver();
-    //     }
-    // }
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+            Application.Quit();
+    }
 }

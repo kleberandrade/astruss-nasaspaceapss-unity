@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
 
     private PhotonView m_PhotonView;
     private int m_QuestionUsed = 0;
-    private Dictionary<int, Player> m_PlayerList = new Dictionary<int, Player>();
     private int m_PlayeSelected;
 
     private List<string> m_WordSelectedList = new List<string>();
@@ -43,21 +42,27 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        var words = m_TextFile.text.Split('\n');
-        m_Words = new List<string>(words);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
+        }
+
+
+        //var words = m_TextFile.text.Split('\n');
+        //m_Words = new List<string>(words);
 
         //
         //m_PlayerList = PhotonNetwork.CurrentRoom.Players;
         //foreach (KeyValuePair<int, Player> player in m_PlayerList)
         //{
         //     Debug.Log(player.Value.NickName);
-        // }
+        //}
 
-        if (PhotonNetwork.IsMasterClient)
-        {
+        //if (PhotonNetwork.IsMasterClient)
+        //{
             //m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
-            m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
-        }
+            //m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
+        //}
 
         UpdateUI();
     }
@@ -65,8 +70,10 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     private void OnSelectPlayer()
     {
-        m_PlayeSelected = Random.Range(0, m_PlayerList.Count);
+        m_PlayeSelected = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
         Debug.Log($"Pilot is {m_PlayeSelected}");
+
+        m_TutorialDialog.SetActive(true);
     }
 
     [PunRPC]

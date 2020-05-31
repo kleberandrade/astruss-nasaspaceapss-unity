@@ -15,7 +15,6 @@ public class HowToPlayManager : MonoBehaviour
         Index++;
         if(Ballon.Length <= Index){
             HowToPlay.SetActive(false);
-            TapControl.SetActive(false);
         }else{
             Ballon[(Index - 1)].SetActive(false);
             Ballon[Index].SetActive(true);

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static string m_ChannelNamePrefs = "CHANNEL_NAME";
+    public static string m_CreateChannelNamePrefs = "CREATE_CHANNEL_NAME";
     public static byte m_MaxPlayers = 6;
 
     public Transform m_Content;
@@ -17,6 +18,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private Dictionary<string, RoomInfo> m_CachedRoomList = new Dictionary<string, RoomInfo>();
     private Dictionary<string, GameObject> m_RoomList = new Dictionary<string, GameObject>();
+
+    private void Start()
+    {
+        if (PlayerPrefs.HasKey(m_CreateChannelNamePrefs))
+        {
+            m_RoomNameInputField.text = PlayerPrefs.GetString(m_CreateChannelNamePrefs);
+        }
+    }
 
     public void JoinRoom()
     {
@@ -30,7 +39,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         if (m_RoomNameInputField.text != string.Empty)
         {
+            PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
             PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
+            PlayerPrefs.Save();
+
             RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
             PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
             SceneManager.LoadScene(m_LobySceneName);

@@ -10,7 +10,7 @@ public class WaitManager : MonoBehaviourPunCallbacks
     public Text m_RoomNameText;
     public Text m_RoomAmountText;
     public GameObject m_CheckImage;
-    public Button m_ReadyButton;
+    public GameObject m_ReadyButton;
     public float m_WaitTime = 3.0f;
 
     public void LeaveRoom()
@@ -19,13 +19,12 @@ public class WaitManager : MonoBehaviourPunCallbacks
             return;
 
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
         SceneManager.LoadScene("Lobby");
     }
 
     public void CanLoadLevel()
     {
-        UpdateUI();
-
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.LogFormat($"PhotonNetwork : Loading Level : {PhotonNetwork.CurrentRoom.PlayerCount}");
@@ -52,34 +51,21 @@ public class WaitManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom");
-        UpdateUI();
-    }
-
-    public override void OnPlayerEnteredRoom(Player other)
-    {
-        Debug.LogFormat($"OnPlayerEnteredRoom() {other.NickName}");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.LogFormat($"OnPlayerEnteredRoom IsMasterClient {PhotonNetwork.IsMasterClient}");
-            CanLoadLevel();
-        }
-    }
-
-    public override void OnPlayerLeftRoom(Player other)
-    {
-        Debug.LogFormat($"OnPlayerLeftRoom() {other.NickName}");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient);
-            CanLoadLevel();
-        }
     }
 
     private void UpdateUI()
     {
+        if (!PhotonNetwork.InRoom)
+            return;
+
         m_CheckImage.gameObject.SetActive(PhotonNetwork.CurrentRoom.PlayerCount == RoomManager.m_MaxPlayers);
         m_RoomNameText.text = $"{PhotonNetwork.CurrentRoom.Name}";
         m_RoomAmountText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {RoomManager.m_MaxPlayers}";
-        m_ReadyButton.interactable = PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 1;
+        m_ReadyButton.SetActive(PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 1);
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateUI();
     }
 }

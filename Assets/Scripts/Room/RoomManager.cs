@@ -14,6 +14,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public InputField m_RoomNameInputField;
     public string m_LobySceneName = "Waiting";
 
+    private Dictionary<string, RoomInfo> m_CachedRoomList = new Dictionary<string, RoomInfo>();
+    private Dictionary<string, GameObject> m_RoomList = new Dictionary<string, GameObject>();
+
     public void JoinRoom()
     {
         PhotonNetwork.JoinLobby();
@@ -32,19 +35,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    public void ClearRoomList()
     {
         foreach (Transform item in m_Content)
-        {
             Destroy(item.gameObject);
-        }
 
-        foreach (RoomInfo info in roomList)
+        m_RoomList.Clear();
+    }
+
+    public void UpdateRoomList()
+    {
+        foreach (RoomInfo info in m_CachedRoomList.Values)
         {
-            if (!info.IsOpen || !info.IsVisible || info.RemovedFromList)
-                continue;
-
-
             GameObject card = Instantiate(m_RoomCard);
             card.transform.parent = m_Content.transform;
             card.transform.localScale = Vector3.one;
@@ -58,7 +60,47 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
             var script = card.GetComponent<RoomCard>();
             script.SetRoom(room);
+
+            m_RoomList.Add(info.Name, card);
         }
+    }
+
+    public void UpdateCacheRoomList(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo info in roomList)
+        {
+            if (!info.IsOpen || !info.IsVisible || info.RemovedFromList)
+            {
+                if (m_CachedRoomList.ContainsKey(info.Name))
+                {
+                    m_CachedRoomList.Remove(info.Name);
+                }
+
+                continue;
+            }
+
+            if (m_CachedRoomList.ContainsKey(info.Name))
+            {
+                m_CachedRoomList[info.Name] = info;
+            } 
+            else
+            {
+                m_CachedRoomList.Add(info.Name, info);
+            }
+        }
+    }
+
+    public override void OnLeftLobby()
+    {
+        m_CachedRoomList.Clear();
+        ClearRoomList();
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        ClearRoomList();
+        UpdateCacheRoomList(roomList);
+        UpdateRoomList();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -79,16 +121,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log("OnJoinedRoom");
         Debug.Log($"Room name: {PhotonNetwork.CurrentRoom.Name}");
         Debug.Log($"Current player in room: {PhotonNetwork.CurrentRoom.PlayerCount}");
-    }
-
-    public override void OnConnected()
-    {
-        Debug.Log("OnConnected");
-    }
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("OnJoinedLobby");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

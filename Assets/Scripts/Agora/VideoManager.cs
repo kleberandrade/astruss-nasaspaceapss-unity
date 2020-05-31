@@ -111,27 +111,27 @@ public class VideoManager : MonoBehaviour
         Destroy(playerVideo.gameObject);
     }
 
-    private void OnApplicationQuit()
-    {
-            LeaveChannel();
-            _mrRtcEngine.DisableAudio();
-            _mrRtcEngine.DisableVideoObserver();
-    }
-
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        if (_mrRtcEngine == null) return;
-
-        if (hasFocus)
-        {
-            _mrRtcEngine.EnableVideoObserver();
-            _mrRtcEngine.EnableAudio();
-        }
-
-        else
-        {
-            _mrRtcEngine.DisableAudio();
-            _mrRtcEngine.DisableVideoObserver();
-        }
-    }
+    // private void OnApplicationQuit()
+    // {
+    //         LeaveChannel();
+    //         _mrRtcEngine.DisableAudio();
+    //         _mrRtcEngine.DisableVideoObserver();
+    // }
+    //
+    // private void OnApplicationFocus(bool hasFocus)
+    // {
+    //     if (_mrRtcEngine == null) return;
+    //
+    //     if (hasFocus)
+    //     {
+    //         _mrRtcEngine.EnableVideoObserver();
+    //         _mrRtcEngine.EnableAudio();
+    //     }
+    //
+    //     else
+    //     {
+    //         _mrRtcEngine.DisableAudio();
+    //         _mrRtcEngine.DisableVideoObserver();
+    //     }
+    // }
 }

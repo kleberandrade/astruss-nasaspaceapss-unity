@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
+    public static byte m_MaxPlayers = 6;
+
     public Transform m_Content;
     public GameObject m_RoomCard;
-    public byte m_MaxPlayers = 6;
     public InputField m_RoomNameInputField;
     public string m_LobySceneName = "Waiting";
 
@@ -58,14 +59,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             var script = card.GetComponent<RoomCard>();
             script.SetRoom(room);
         }
-    }
-
-    public void LeaveRoom()
-    {
-        if (!PhotonNetwork.InRoom)
-            return;
-
-        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

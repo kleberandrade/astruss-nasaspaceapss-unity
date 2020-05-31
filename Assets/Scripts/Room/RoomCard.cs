@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomCard : MonoBehaviour
@@ -18,9 +19,8 @@ public class RoomCard : MonoBehaviour
 
     public void JoinRoom()
     {
-        if (PhotonNetwork.InLobby)
-        {
-            PhotonNetwork.JoinRoom(m_Room.roomName);
-        }
+        Debug.Log($"Join Room {m_Room.roomName}");
+        PhotonNetwork.JoinRoom(m_Room.roomName);
+        SceneManager.LoadScene("Waiting");
     }
 }

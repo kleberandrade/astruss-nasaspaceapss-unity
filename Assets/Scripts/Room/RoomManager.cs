@@ -2,6 +2,7 @@
 using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -10,6 +11,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public GameObject m_RoomCard;
     public byte m_MaxPlayers = 6;
     public InputField m_RoomNameInputField;
+    public string m_LobySceneName = "Waiting";
 
     public void JoinRoom()
     {
@@ -18,10 +20,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        if (!PhotonNetwork.InLobby)
+            return;
+
         if (m_RoomNameInputField.text != string.Empty)
         {
             RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
             PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
+            SceneManager.LoadScene(m_LobySceneName);
         }
     }
 
@@ -65,7 +71,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         string room = $"Room {Random.Range(1000, 9999)}";
-        PhotonNetwork.CreateRoom(room);
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnConnectedToMaster()
@@ -90,5 +96,25 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("OnJoinedLobby");
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log("OnPlayerEnteredRoom");
+        if (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log("OnPlayerLeftRoom");
+        if (!PhotonNetwork.CurrentRoom.IsOpen && !PhotonNetwork.CurrentRoom.IsVisible && PhotonNetwork.CurrentRoom.MaxPlayers > PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+            PhotonNetwork.CurrentRoom.IsVisible = true;
+        }
     }
 }

@@ -62,6 +62,9 @@ public class WaitManager : MonoBehaviourPunCallbacks
         m_RoomNameText.text = $"{PhotonNetwork.CurrentRoom.Name}";
         m_RoomAmountText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {RoomManager.m_MaxPlayers}";
         m_ReadyButton.SetActive(PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 1);
+
+        PhotonNetwork.CurrentRoom.IsOpen = PhotonNetwork.CurrentRoom.PlayerCount != RoomManager.m_MaxPlayers;
+        PhotonNetwork.CurrentRoom.IsVisible = PhotonNetwork.CurrentRoom.PlayerCount != RoomManager.m_MaxPlayers;
     }
 
     private void FixedUpdate()

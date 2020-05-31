@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
+    public static string m_ChannelNamePrefs = "CHANNEL_NAME";
     public static byte m_MaxPlayers = 6;
 
     public Transform m_Content;
@@ -29,6 +30,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         if (m_RoomNameInputField.text != string.Empty)
         {
+            PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
             RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
             PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
             SceneManager.LoadScene(m_LobySceneName);

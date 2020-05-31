@@ -20,6 +20,7 @@ public class RoomCard : MonoBehaviour
     public void JoinRoom()
     {
         Debug.Log($"Join Room {m_Room.roomName}");
+        PlayerPrefs.SetString(RoomManager.m_ChannelNamePrefs, m_Room.roomName);
         PhotonNetwork.JoinRoom(m_Room.roomName);
         SceneManager.LoadScene("Waiting");
     }

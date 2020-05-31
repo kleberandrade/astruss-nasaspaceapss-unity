@@ -19,7 +19,6 @@ public class VideoManager : MonoBehaviour
     private IRtcEngine _mrRtcEngine = null;
     private uint _myId = 0;
 
-    //public List<PlayerVideo> playerVideos;
     public Dictionary<uint, PlayerVideo> playerVideos = new Dictionary<uint, PlayerVideo>();
     private void Start()
     {
@@ -76,22 +75,22 @@ public class VideoManager : MonoBehaviour
     {
         _myId = uid;
         _mrRtcEngine.EnableVideo();
-        _mrRtcEngine.EnableAudio();
-        //NULL REFERENCE AQUI. PROVAVELMENTE ALGUM ERRO NO DICTIONARY.
         var go = Instantiate(videoObject, grid);
         var playerVideo = go.GetComponent<PlayerVideo>();
         playerVideos.Add(_myId, playerVideo);
         playerVideo.Set(0);
-        textLog.color = Color.blue;
-        textLog.text = $"{playerVideo.gameObject.name}";
     }
     
     private void OnUserJoined(uint uid, int elapsed)
     {
         if (uid == _myId || _myId == 0)
+        {
+            textLog.color = Color.blue;
+            textLog.text = $"{playerVideos.Count}";
             return;
+        }
 
-        //NULL REFERENCE AQUI. PROVAVELMENTE ALGUM ERRO NO DICTIONARY.
+        _mrRtcEngine.EnableAudio();
         var go = Instantiate(videoObject, grid);
         var playerVideo = go.GetComponent<PlayerVideo>();
         playerVideos.Add(uid, playerVideo);
@@ -103,12 +102,14 @@ public class VideoManager : MonoBehaviour
 
     private void OnLeaveChannel(RtcStats stats)
     {
+        _mrRtcEngine.DisableAudio();
         playerVideos[_myId].Clear();
         _mrRtcEngine.DisableVideoObserver();
     }
 
     private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
     {
+        _mrRtcEngine.DisableAudio();
         var playerVideo = playerVideos[uid];
         playerVideo.Clear();
         Destroy(playerVideo.gameObject);
@@ -118,6 +119,7 @@ public class VideoManager : MonoBehaviour
     {
         try
         {
+            _mrRtcEngine.DisableAudio();
             playerVideos[_myId].Clear();
             _mrRtcEngine.DisableVideoObserver();
         }

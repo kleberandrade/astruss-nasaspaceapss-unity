@@ -20,7 +20,7 @@ public class VideoManager : MonoBehaviour
     private uint _myId = 0;
 
     //public List<PlayerVideo> playerVideos;
-    public Dictionary<uint, PlayerVideo> playerVideos;
+    public Dictionary<uint, PlayerVideo> playerVideos = new Dictionary<uint, PlayerVideo>();
     private void Start()
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))

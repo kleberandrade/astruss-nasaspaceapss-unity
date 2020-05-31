@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5909110264704872948}
   - component: {fileID: 7523982301394722832}
   m_Layer: 5
-  m_Name: NomeSala
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: NOME DA SALA
 --- !u!1 &3515141252393800594
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,9 +90,9 @@ GameObject:
   - component: {fileID: 826385074679621543}
   - component: {fileID: 268592385600696891}
   - component: {fileID: 3539736296705948019}
-  - component: {fileID: 73316209799432645}
+  - component: {fileID: 2097174036766169743}
   m_Layer: 5
-  m_Name: RoomTag
+  m_Name: RoomCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,9 +105,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3515141252393800594}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.6482763, y: 2.6482763, z: 2.6482763}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6569966257264762497}
   - {fileID: 7227504848395130916}
@@ -198,8 +198,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 268592385600696891}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
---- !u!114 &73316209799432645
+      m_Calls:
+      - m_Target: {fileID: 2097174036766169743}
+        m_MethodName: JoinRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2097174036766169743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -208,15 +219,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3515141252393800594}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bf3db246256dc045808a32fa7e36b04, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e3f97426ae0b6745920c534c9c03b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TextUI: {fileID: 7523982301394722832}
-  m_Amount: {fileID: 7693351294447383353}
-  m_Room:
-    room_name: 
-    amount: 0
-    max_size: 0
+  m_RoomName: {fileID: 7523982301394722832}
+  m_RoomPlayers: {fileID: 7693351294447383353}
 --- !u!1 &5453525467785830036
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +236,7 @@ GameObject:
   - component: {fileID: 6923890734886921304}
   - component: {fileID: 7693351294447383353}
   m_Layer: 5
-  m_Name: QuantidadeSala
+  m_Name: Amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,8 +258,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: 0}
-  m_SizeDelta: {x: -40, y: 0}
+  m_AnchoredPosition: {x: -25, y: 0}
+  m_SizeDelta: {x: -50, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6923890734886921304
 CanvasRenderer:
@@ -294,4 +301,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 0 / 0

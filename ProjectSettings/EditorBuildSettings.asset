@@ -6,11 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SingIn.unity
-    guid: fa91bfb624eb9ed46aebf10f11e3d3f9
-  - enabled: 1
     path: Assets/Scenes/Intro.unity
     guid: 16f900794a05b4d4a9a64a2863a9cb7b
+  - enabled: 1
+    path: Assets/Scenes/History.unity
+    guid: 06e28388987b9904086ea3d77df67134
+  - enabled: 1
+    path: Assets/Scenes/SingIn.unity
+    guid: fa91bfb624eb9ed46aebf10f11e3d3f9
   - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: f63e1695a776eaf44832d41617b7f54f

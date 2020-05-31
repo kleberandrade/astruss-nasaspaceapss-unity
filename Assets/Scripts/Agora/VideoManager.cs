@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using agora_gaming_rtc;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class VideoManager : MonoBehaviour
@@ -29,8 +30,8 @@ public class VideoManager : MonoBehaviour
             Permission.RequestUserPermission(Permission.Microphone);
         }
         
-        _mrRtcEngine = IRtcEngine.GetEngine(_appId);
-        // _channelName = PlayerPrefs.GetString("channelName");
+        _mrRtcEngine = IRtcEngine.GetEngine(_appId); 
+        _channelName = PlayerPrefs.GetString(RoomManager.m_ChannelNamePrefs);
         JoinChannel();
     }
 
@@ -99,6 +100,7 @@ public class VideoManager : MonoBehaviour
         _mrRtcEngine.DisableAudio();
         playerVideos[_myId].Clear();
         _mrRtcEngine.DisableVideoObserver();
+        SceneManager.LoadScene("Lobby");
     }
 
     private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)

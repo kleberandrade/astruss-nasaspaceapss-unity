@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [Header("Rules")]
-    public int m_MaxQuesions = 50;
+    public int m_MaxQuestions = 50;
 
     [Header("Points")]
     public int m_NextQuestionPoint = 1;
@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Words")]
     public int m_NumberWordSelect = 3;
-    public TextAsset m_WordFile;
+    public TextAsset m_TextFile;
     public List<string> m_Words = new List<string>();
 
     [Header("UI")]
@@ -43,17 +43,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //m_Words = new List<string>(m_WordTextUI.text.Split('\n'));
-        m_PlayerList = PhotonNetwork.CurrentRoom.Players;
-        foreach (KeyValuePair<int, Player> player in m_PlayerList)
-        {
-            Debug.Log(player.Value.NickName);
-        }
+        var words = m_TextFile.text.Split('\n');
+        m_Words = new List<string>(words);
+
+        //
+        //m_PlayerList = PhotonNetwork.CurrentRoom.Players;
+        //foreach (KeyValuePair<int, Player> player in m_PlayerList)
+        //{
+        //     Debug.Log(player.Value.NickName);
+        // }
 
         if (PhotonNetwork.IsMasterClient)
         {
-            m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
-            //m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
+            //m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
+            m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
         }
 
         UpdateUI();
@@ -69,6 +72,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     private void OnSelectWord()
     {
+        Debug.Log("OnSelectWord");
         m_WordSelectedList.Clear();
         while (m_WordSelectedList.Count < m_NumberWordSelect)
         {
@@ -98,7 +102,7 @@ public class GameManager : MonoBehaviour
         m_QuestionUsed += points;
         UpdateUI();
 
-        if (m_QuestionUsed >= m_MaxQuesions)
+        if (m_QuestionUsed >= m_MaxQuestions)
         {
             m_GameoverDialog.SetActive(true);
         }
@@ -117,6 +121,6 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        m_ScoreTextUI.text = $"{m_MaxQuesions - m_QuestionUsed}/{m_MaxQuesions}";
+        m_ScoreTextUI.text = $"{m_MaxQuestions - m_QuestionUsed}/{m_MaxQuestions}";
     }
 }

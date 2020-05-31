@@ -720,14 +720,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4470bfa56e44e4faa6f3b000389241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxQuesions: 50
+  m_MaxQuestions: 50
   m_NextQuestionPoint: 1
   m_WrongAnswerPoint: 5
   m_NumberWordSelect: 3
-  m_WordFile: {fileID: 4900000, guid: c1e5a208ab90d674b91212f836246b5f, type: 3}
+  m_TextFile: {fileID: 4900000, guid: c1e5a208ab90d674b91212f836246b5f, type: 3}
   m_Words: []
-  m_WordText: {fileID: 1439887353}
-  m_ScoreText: {fileID: 254025916}
+  m_WordTextUI: {fileID: 1439887353}
+  m_ScoreTextUI: {fileID: 254025916}
   m_TutorialDialog: {fileID: 0}
   m_SelectWordDialog: {fileID: 0}
   m_QuitDialog: {fileID: 0}
@@ -761,7 +761,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741464913}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 597fa9e3db3700b4f89ad764ebe0f3b2, type: 3}
   m_Name: 

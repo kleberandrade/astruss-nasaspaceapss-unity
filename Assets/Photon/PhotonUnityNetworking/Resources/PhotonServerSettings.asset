@@ -43,6 +43,7 @@ MonoBehaviour:
   - OnRightAsked
   - OnSelectPlayer
   - OnSelectWord
+  - UpdateUI
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

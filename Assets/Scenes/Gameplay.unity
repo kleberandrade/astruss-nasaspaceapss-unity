@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 131426647}
   - component: {fileID: 131426648}
   m_Layer: 5
-  m_Name: Master
+  m_Name: Pilot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1338,7 +1338,7 @@ GameObject:
   - component: {fileID: 442419215}
   - component: {fileID: 442419216}
   m_Layer: 5
-  m_Name: Clients
+  m_Name: Team
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2074,6 +2074,8 @@ MonoBehaviour:
   m_NumberWordSelect: 3
   m_TextFile: {fileID: 4900000, guid: c1e5a208ab90d674b91212f836246b5f, type: 3}
   m_Words: []
+  m_PilotFooter: {fileID: 131426646}
+  m_TeamFooter: {fileID: 1351926981}
   m_WordTextUI: {fileID: 1439887353}
   m_ScoreTextUI: {fileID: 254025916}
   m_TutorialDialog: {fileID: 1972238328}

@@ -1,10 +1,10 @@
 ﻿using Photon.Pun;
-using Photon.Realtime;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     [Header("Rules")]
     public int m_MaxQuestions = 50;
@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
     public TextAsset m_TextFile;
     public List<string> m_Words = new List<string>();
 
+    [Header("Footer")]
+    public GameObject m_PilotFooter;
+    public GameObject m_TeamFooter;
+
     [Header("UI")]
     public Text m_WordTextUI;
     public Text m_ScoreTextUI;
@@ -30,48 +34,55 @@ public class GameManager : MonoBehaviour
 
     private PhotonView m_PhotonView;
     private int m_QuestionUsed = 0;
-    private int m_PlayeSelected;
+    private string m_PlayerSelected = "";
 
-    private List<string> m_WordSelectedList = new List<string>();
+    private HashSet<string> m_WordSelectedList = new HashSet<string>();
     private int m_WordSelected = 0;
-
-    private void Awake()
-    {
-        m_PhotonView = GetComponent<PhotonView>();
-    }
 
     private void Start()
     {
+        m_PhotonView = GetComponent<PhotonView>();
+
+        var words = m_TextFile.text.Split('\n');
+        m_Words = new List<string>(words);
+
         if (PhotonNetwork.IsMasterClient)
         {
             m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
+            m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
         }
+    }
 
-
-        //var words = m_TextFile.text.Split('\n');
-        //m_Words = new List<string>(words);
-
-        //
-        //m_PlayerList = PhotonNetwork.CurrentRoom.Players;
-        //foreach (KeyValuePair<int, Player> player in m_PlayerList)
-        //{
-        //     Debug.Log(player.Value.NickName);
-        //}
-
-        //if (PhotonNetwork.IsMasterClient)
-        //{
-            //m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
-            //m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
-        //}
-
-        UpdateUI();
+    private void Update()
+    {
+        if (m_PlayerSelected != "")
+        {
+            ///Debug.Log($"Update {m_PhotonView.Owner.NickName} / {m_PlayerSelected}");
+            m_ScoreTextUI.text = $"{m_MaxQuestions - m_QuestionUsed}/{m_MaxQuestions}";
+            //m_WordTextUI.gameObject.SetActive(m_PhotonView.Owner.NickName == m_PlayerSelected);
+            //m_PilotFooter.SetActive(m_PhotonView.Owner.NickName == m_PlayerSelected);
+            //m_TeamFooter.SetActive(m_PhotonView.Owner.NickName != m_PlayerSelected);
+        }
     }
 
     [PunRPC]
     private void OnSelectPlayer()
     {
-        m_PlayeSelected = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
-        Debug.Log($"Pilot is {m_PlayeSelected}");
+        Debug.Log("OnSelectPlayer");
+        var index = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
+        var amount = 0;
+        foreach (var player in PhotonNetwork.CurrentRoom.Players)
+        {
+            Debug.Log($"{player.Value.NickName}");
+            if (index == amount)
+            {
+                m_PlayerSelected = player.Value.NickName;
+                Debug.Log($"Random {index}/{PhotonNetwork.CurrentRoom.Players.Count} = Pilot is {m_PlayerSelected}");
+                break;
+            }
+
+            amount++;
+        }
 
         m_TutorialDialog.SetActive(true);
     }
@@ -81,16 +92,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("OnSelectWord");
         m_WordSelectedList.Clear();
+        /*
         while (m_WordSelectedList.Count < m_NumberWordSelect)
         {
             var index = Random.Range(0, m_WordSelectedList.Count);
-            var word = m_Words[index];
-            if (!m_WordSelectedList.Contains(word))
-            {
-                m_WordSelectedList.Add(word);
-                Debug.Log($"Word selected: {word}");
-            }
+            m_WordSelectedList.Add(m_Words[index]);
+            Debug.Log($"Word selected: {m_Words[index]}");
         }
+        */
     }
 
     public void NextAnswer()
@@ -107,8 +116,6 @@ public class GameManager : MonoBehaviour
     private void OnNextAnswer(int points)
     {
         m_QuestionUsed += points;
-        UpdateUI();
-
         if (m_QuestionUsed >= m_MaxQuestions)
         {
             m_GameoverDialog.SetActive(true);
@@ -124,10 +131,5 @@ public class GameManager : MonoBehaviour
     public void OnRightAsked()
     {
         m_GameoverDialog.SetActive(true);
-    }
-
-    private void UpdateUI()
-    {
-        m_ScoreTextUI.text = $"{m_MaxQuestions - m_QuestionUsed}/{m_MaxQuestions}";
     }
 }

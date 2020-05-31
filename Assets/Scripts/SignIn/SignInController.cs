@@ -12,6 +12,8 @@ public class SignInController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
+
         if (PlayerPrefs.HasKey(m_PlayerNamePrefs))
         {
             m_PlayerNameInputField.text = PlayerPrefs.GetString(m_PlayerNamePrefs);

@@ -10,12 +10,9 @@ public class VideoManager : MonoBehaviour
 {
     public RectTransform grid;
     [SerializeField] private GameObject videoObject;
-    public Button button;
-    public Text buttonText;
-    public Text textLog;
-    
-    private string _channelName = "a";
-    private string _appId = "a68474b928f24df18adfa37e67e0d6cc";
+
+    private string _channelName = "A";
+    private string _appId = "705fb58352d04b4894149b862d278fb6";
     private IRtcEngine _mrRtcEngine = null;
     private uint _myId = 0;
 
@@ -33,14 +30,12 @@ public class VideoManager : MonoBehaviour
         }
         
         _mrRtcEngine = IRtcEngine.GetEngine(_appId);
-        button.onClick.AddListener(JoinChannel);
+        // _channelName = PlayerPrefs.GetString("channelName");
+        JoinChannel();
     }
 
     private void JoinChannel()
     {
-        button.onClick.RemoveListener(JoinChannel);
-        button.onClick.AddListener(LeaveChannel);
-        buttonText.text = "Leave";
         _mrRtcEngine.EnableVideoObserver();
 
         _mrRtcEngine.OnJoinChannelSuccess += OnJoinChannelSuccess;
@@ -57,12 +52,7 @@ public class VideoManager : MonoBehaviour
 
     private void LeaveChannel()
     {
-        button.onClick.RemoveListener(LeaveChannel);
-        button.onClick.AddListener(JoinChannel);
-        buttonText.text = "Join";
-
         playerVideos.Clear();
-
 
         _mrRtcEngine.LeaveChannel();
         _mrRtcEngine.OnJoinChannelSuccess -= OnJoinChannelSuccess;
@@ -85,8 +75,6 @@ public class VideoManager : MonoBehaviour
     {
         if (uid == _myId || _myId == 0)
         {
-            textLog.color = Color.blue;
-            textLog.text = $"{playerVideos.Count}";
             return;
         }
 
@@ -96,8 +84,6 @@ public class VideoManager : MonoBehaviour
         playerVideos.Add(uid, playerVideo);
         playerVideo.Set(uid);
         playerVideo.gameObject.SetActive(true);
-        textLog.color = Color.red;
-        textLog.text = $"{playerVideo.gameObject.name}";
     }
 
     private void OnLeaveChannel(RtcStats stats)
@@ -117,15 +103,24 @@ public class VideoManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        try
+            _mrRtcEngine.DisableAudio();
+            _mrRtcEngine.DisableVideoObserver();
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (_mrRtcEngine == null) return;
+
+        if (hasFocus)
+        {
+            _mrRtcEngine.EnableVideoObserver();
+            _mrRtcEngine.EnableAudio();
+        }
+
+        else
         {
             _mrRtcEngine.DisableAudio();
-            playerVideos[_myId].Clear();
             _mrRtcEngine.DisableVideoObserver();
-        }
-        catch
-        {
-            // ignored
         }
     }
 }

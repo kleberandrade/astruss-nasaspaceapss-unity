@@ -11,7 +11,7 @@ public class VideoManager : MonoBehaviour
     public RectTransform grid;
     [SerializeField] private GameObject videoObject;
 
-    private string _channelName = "A";
+    private string _channelName = "705fb58352d04b4894149b862d278fb6";
     private string _appId = "705fb58352d04b4894149b862d278fb6";
     private IRtcEngine _mrRtcEngine = null;
     private uint _myId = 0;
@@ -32,6 +32,14 @@ public class VideoManager : MonoBehaviour
         _mrRtcEngine = IRtcEngine.GetEngine(_appId);
         // _channelName = PlayerPrefs.GetString("channelName");
         JoinChannel();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LeaveChannel();
+        }
     }
 
     private void JoinChannel()
@@ -103,6 +111,7 @@ public class VideoManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+            LeaveChannel();
             _mrRtcEngine.DisableAudio();
             _mrRtcEngine.DisableVideoObserver();
     }

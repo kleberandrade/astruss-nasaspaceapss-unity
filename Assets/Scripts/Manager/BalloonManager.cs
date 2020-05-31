@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class BalloonManager : MonoBehaviour
 {
-    public GameObject[] Balloons;
+    public Text Ballon_Title;
+    public Text Ballon_Text;
+    public string[] Title;
+    public string[] Text;
     public int Index = 0;
 
     [Header("Transition")]
@@ -19,11 +23,11 @@ public class BalloonManager : MonoBehaviour
     public void NextBalloon()
     {
         Index++;
-        if(Balloons.Length <= Index){
+        if(Title.Length <= Index){
             LoadLevel("SingIn");
         }else{
-            Balloons[(Index - 1)].SetActive(false);
-            Balloons[Index].SetActive(true);
+            Ballon_Title.text = Title[Index];
+            Ballon_Text.text = Text[Index];
         }
     }
 

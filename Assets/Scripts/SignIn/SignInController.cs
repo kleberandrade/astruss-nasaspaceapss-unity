@@ -13,7 +13,6 @@ public class SignInController : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-
         if (PlayerPrefs.HasKey(m_PlayerNamePrefs))
         {
             m_PlayerNameInputField.text = PlayerPrefs.GetString(m_PlayerNamePrefs);
@@ -26,6 +25,7 @@ public class SignInController : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.NickName = m_PlayerNameInputField.text;
             PlayerPrefs.SetString(m_PlayerNamePrefs, m_PlayerNameInputField.text);
+            PlayerPrefs.Save();
         } 
         else
         {

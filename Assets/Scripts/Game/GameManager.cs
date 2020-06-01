@@ -56,43 +56,39 @@ public class GameManager : MonoBehaviour
     {
         var words = m_TextFile.text.Split('\n');
         m_Words = new List<string>(words);
+        RandomPlayerSelect();
     }
 
     private void RandomPlayerSelect()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            SelectPlayer();
-        }
-    }
-
-    private void SelectPlayer()
-    {
-        Debug.Log("OnSelectPlayer");
-        var index = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
-        var amount = 0;
-        string selectedPlayer = "";
-        foreach (var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            Debug.Log($"{player.Value.NickName}");
-            if (index == amount)
+            Debug.Log("OnSelectPlayer");
+            var index = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
+            var amount = 0;
+            string selectedPlayer = "";
+            foreach (var player in PhotonNetwork.CurrentRoom.Players)
             {
-                selectedPlayer = player.Value.NickName;
-                Debug.Log($"Random {index}/{PhotonNetwork.CurrentRoom.Players.Count} = Pilot is {m_PlayerSelected}");
-                break;
+                Debug.Log($"{player.Value.NickName}");
+                if (index == amount)
+                {
+                    selectedPlayer = player.Value.NickName;
+                    Debug.Log($"Random {index}/{PhotonNetwork.CurrentRoom.Players.Count} = Pilot is {m_PlayerSelected}");
+                    break;
+                }
+
+                amount++;
             }
 
-            amount++;
+            m_PhotonView.RPC("SetPlayerSelected", RpcTarget.AllBuffered, selectedPlayer as object);
+            m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
         }
-
-        m_PhotonView.RPC("SetPlayerSelected", RpcTarget.AllBuffered);
-        m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
-    public void SetPlayerSelected(string seletedPlayer)
+    public void SetPlayerSelected(object seletedPlayer)
     {
-        m_PlayerSelected = seletedPlayer;
+        m_PlayerSelected = (string)seletedPlayer;
     }
 
     private void Update()
@@ -160,9 +156,7 @@ public class GameManager : MonoBehaviour
     {
         m_QuestionUsed += points;
         if (m_QuestionUsed >= m_MaxQuestions)
-        {
-            //m_GameoverDialog.SetActive(true);
-        }
+            m_PilotGameoverDialog.SetActive(true);
     }
 
     public void RightAnswer()
@@ -173,6 +167,11 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void OnRightAsked()
     {
-        //m_GameoverDialog.SetActive(true);
+        m_TeamGameoverDialog.SetActive(true);
+    }
+
+    public void TryAgain()
+    {
+        RandomPlayerSelect();
     }
 }

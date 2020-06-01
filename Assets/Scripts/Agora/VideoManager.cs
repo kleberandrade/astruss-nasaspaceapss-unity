@@ -103,10 +103,4 @@ public class VideoManager : MonoBehaviour
         playerVideo.Clear();
         Destroy(playerVideo.gameObject);
     }
-
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        if (!hasFocus)
-            Application.Quit();
-    }
 }

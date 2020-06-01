@@ -1,10 +1,13 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SignInController : MonoBehaviourPunCallbacks
 {
+    public AudioSource Sfx_Click;
     public string m_LobySceneName = "Lobby";
     public InputField m_PlayerNameInputField;
 
@@ -21,6 +24,12 @@ public class SignInController : MonoBehaviourPunCallbacks
 
     public void Login()
     {
+        Sfx_Click.Play();
+        StartCoroutine(ChangeScene());
+    }
+
+    private IEnumerator ChangeScene(){
+        yield return new WaitForSeconds(0.25f);
         if (m_PlayerNameInputField.text != string.Empty)
         {
             PhotonNetwork.NickName = m_PlayerNameInputField.text;
@@ -34,5 +43,6 @@ public class SignInController : MonoBehaviourPunCallbacks
 
         PhotonNetwork.ConnectUsingSettings();
         SceneManager.LoadScene(m_LobySceneName);
+        yield return null;
     }
 }

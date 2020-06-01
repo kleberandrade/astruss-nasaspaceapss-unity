@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PlayerVideo : MonoBehaviour
 {
-    public GameObject prefab;
     public VideoSurface videoSurface;
 
     public void Set(uint uid)

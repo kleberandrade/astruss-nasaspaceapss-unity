@@ -44,6 +44,9 @@ MonoBehaviour:
   - OnSelectPlayer
   - OnSelectWord
   - UpdateUI
+  - OnShowChooseWordDialog
+  - OnChooseWordDialog
+  - SetPlayerSelected
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

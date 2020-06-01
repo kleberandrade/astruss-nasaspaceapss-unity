@@ -1,11 +1,22 @@
 ﻿using Photon.Pun;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+    void Awake()
+    {
+        if (Instance == null) { 
+            Instance = this; 
+        }
+
+        m_CarManager = GetComponent<CardManager>();
+        m_PhotonView = GetComponent<PhotonView>();
+    }
+
     [Header("Rules")]
     public int m_MaxQuestions = 50;
 
@@ -30,53 +41,43 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameObject m_TutorialDialog;
     public GameObject m_SelectWordDialog;
     public GameObject m_QuitDialog;
-    public GameObject m_GameoverDialog;
+    public GameObject m_TeamGameoverDialog;
+    public GameObject m_PilotGameoverDialog;
 
     private PhotonView m_PhotonView;
     private int m_QuestionUsed = 0;
     private string m_PlayerSelected = "";
 
     private HashSet<string> m_WordSelectedList = new HashSet<string>();
-    private int m_WordSelected = 0;
+    private string m_WordSelected = "";
+    private CardManager m_CarManager;
 
     private void Start()
     {
-        m_PhotonView = GetComponent<PhotonView>();
-
         var words = m_TextFile.text.Split('\n');
         m_Words = new List<string>(words);
+    }
 
+    private void RandomPlayerSelect()
+    {
         if (PhotonNetwork.IsMasterClient)
         {
-            m_PhotonView.RPC("OnSelectPlayer", RpcTarget.AllBuffered);
-            m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
+            SelectPlayer();
         }
     }
 
-    private void Update()
-    {
-        if (m_PlayerSelected != "")
-        {
-            ///Debug.Log($"Update {m_PhotonView.Owner.NickName} / {m_PlayerSelected}");
-            m_ScoreTextUI.text = $"{m_MaxQuestions - m_QuestionUsed}/{m_MaxQuestions}";
-            //m_WordTextUI.gameObject.SetActive(m_PhotonView.Owner.NickName == m_PlayerSelected);
-            //m_PilotFooter.SetActive(m_PhotonView.Owner.NickName == m_PlayerSelected);
-            //m_TeamFooter.SetActive(m_PhotonView.Owner.NickName != m_PlayerSelected);
-        }
-    }
-
-    [PunRPC]
-    private void OnSelectPlayer()
+    private void SelectPlayer()
     {
         Debug.Log("OnSelectPlayer");
         var index = Random.Range(0, PhotonNetwork.CurrentRoom.Players.Count);
         var amount = 0;
+        string selectedPlayer = "";
         foreach (var player in PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log($"{player.Value.NickName}");
             if (index == amount)
             {
-                m_PlayerSelected = player.Value.NickName;
+                selectedPlayer = player.Value.NickName;
                 Debug.Log($"Random {index}/{PhotonNetwork.CurrentRoom.Players.Count} = Pilot is {m_PlayerSelected}");
                 break;
             }
@@ -84,7 +85,47 @@ public class GameManager : MonoBehaviourPunCallbacks
             amount++;
         }
 
-        m_TutorialDialog.SetActive(true);
+        m_PhotonView.RPC("SetPlayerSelected", RpcTarget.AllBuffered);
+        m_PhotonView.RPC("OnSelectWord", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    public void SetPlayerSelected(string seletedPlayer)
+    {
+        m_PlayerSelected = seletedPlayer;
+    }
+
+    private void Update()
+    {
+        m_ScoreTextUI.text = $"{m_MaxQuestions - m_QuestionUsed}/{m_MaxQuestions}";
+        m_WordTextUI.text = m_WordSelected;
+        m_WordTextUI.gameObject.SetActive(PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected));
+        m_PilotFooter.SetActive(PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected));
+        m_TeamFooter.SetActive(!PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected));
+    }
+
+    public void ShowChooseWordDialog()
+    {
+        if (PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected))
+        {
+            Debug.Log("ShowChooseWordDialog");
+            Debug.Log($"ShowChooseWordDialog: {PhotonNetwork.LocalPlayer.NickName}/{m_PlayerSelected}");
+            m_SelectWordDialog.SetActive(true);
+        }
+    }
+
+    public void SelectWord(string word)
+    {
+        if (PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected))
+        {
+            Debug.Log("SelectWord");
+            Debug.Log($"SelectWord: {PhotonNetwork.LocalPlayer.NickName}/{m_PlayerSelected}");
+            if (PhotonNetwork.LocalPlayer.NickName.Equals(m_PlayerSelected))
+            {
+                m_WordSelected = word;
+                m_SelectWordDialog.SetActive(false);
+            }
+        }
     }
 
     [PunRPC]
@@ -92,14 +133,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("OnSelectWord");
         m_WordSelectedList.Clear();
-        /*
         while (m_WordSelectedList.Count < m_NumberWordSelect)
         {
-            var index = Random.Range(0, m_WordSelectedList.Count);
+            var index = Random.Range(0, m_Words.Count);
             m_WordSelectedList.Add(m_Words[index]);
             Debug.Log($"Word selected: {m_Words[index]}");
         }
-        */
+
+        m_CarManager.SetWords(m_WordSelectedList.ToList());
+
+        m_TutorialDialog.SetActive(true);
     }
 
     public void NextAnswer()
@@ -118,7 +161,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         m_QuestionUsed += points;
         if (m_QuestionUsed >= m_MaxQuestions)
         {
-            m_GameoverDialog.SetActive(true);
+            //m_GameoverDialog.SetActive(true);
         }
     }
 
@@ -130,6 +173,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void OnRightAsked()
     {
-        m_GameoverDialog.SetActive(true);
+        //m_GameoverDialog.SetActive(true);
     }
 }

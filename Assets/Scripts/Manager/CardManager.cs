@@ -5,31 +5,32 @@ using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
-    public static CardManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-    }
-
     [Header("Cards")]
     public GameObject m_CardButton;
-    public List<Card> m_Cards = new List<Card>();
+    public List<GameObject> m_Cards = new List<GameObject>();
     public GameObject m_CardParent;
 
-    private void Start()
+    public void SetWords(List<string> words)
     {
-        foreach (Card card in m_Cards)
+        foreach (var card in m_Cards)
+            Destroy(card);
+
+        m_Cards.Clear();
+        foreach (var word in words)
         {
             GameObject button = Instantiate(m_CardButton);
             button.transform.parent = m_CardParent.transform;
             button.transform.localScale = Vector3.one;
 
+            Card card = new Card()
+            {
+                label = word,
+            };
+
             var script = button.GetComponent<CardButton>();
             script.SetCard(card);
+
+            m_Cards.Add(button);
         }
     }
 }

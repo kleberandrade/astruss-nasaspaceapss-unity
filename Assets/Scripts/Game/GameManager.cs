@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
     void Awake()
     {
         if (Instance == null) { 
@@ -172,6 +174,21 @@ public class GameManager : MonoBehaviour
 
     public void TryAgain()
     {
+        m_PhotonView.RPC("OnTryAgain", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    private void OnTryAgain()
+    {
+        m_PilotGameoverDialog.SetActive(false);
+        m_TeamGameoverDialog.SetActive(false);
+        m_QuestionUsed = 0;
         RandomPlayerSelect();
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("Lobby");
     }
 }

@@ -16,7 +16,12 @@ public class CardButton : MonoBehaviour
     {
         m_Card = card;
         m_TextUI.text = card.label;
-        // m_Button.onClick.AddListener(() => ShowDetails());
+        m_Button.onClick.AddListener(() => OnClick());
+    }
+
+    private void OnClick()
+    {
+        GameManager.Instance.SelectWord(m_Card.label);
     }
 }
 

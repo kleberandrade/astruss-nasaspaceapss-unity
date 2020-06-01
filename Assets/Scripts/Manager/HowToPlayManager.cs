@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class HowToPlayManager : MonoBehaviour
 {
@@ -14,6 +11,7 @@ public class HowToPlayManager : MonoBehaviour
     {
         Index++;
         if(Ballon.Length <= Index){
+            GameManager.Instance.ShowChooseWordDialog();
             HowToPlay.SetActive(false);
         }else{
             Ballon[(Index - 1)].SetActive(false);

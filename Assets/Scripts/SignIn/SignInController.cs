@@ -15,6 +15,8 @@ public class SignInController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
         PhotonNetwork.AutomaticallySyncScene = true;
         if (PlayerPrefs.HasKey(m_PlayerNamePrefs))
         {

@@ -98,4 +98,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0613ced4c5258044a6370a4c2e4c4e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
   videoSurface: {fileID: 5457164161197204245}

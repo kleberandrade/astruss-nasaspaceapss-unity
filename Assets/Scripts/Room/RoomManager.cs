@@ -1,6 +1,7 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -34,19 +35,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        if (!PhotonNetwork.InLobby)
-            return;
-
-        if (m_RoomNameInputField.text != string.Empty)
-        {
-            PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
-            PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
-            PlayerPrefs.Save();
-
-            RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
-            PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
-            SceneManager.LoadScene(m_LobySceneName);
-        }
+        StartCoroutine(Coroutine_CreateRoom());
     }
 
     public void ClearRoomList()
@@ -156,4 +145,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsVisible = true;
         }
     }
+
+    private IEnumerator Coroutine_CreateRoom(){
+        yield return new WaitForSeconds(0.25f);
+        if (!PhotonNetwork.InLobby)
+            yield return null;
+        else if (m_RoomNameInputField.text != string.Empty)
+        {
+            PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
+            PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
+            PlayerPrefs.Save();
+
+            RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
+            PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
+            SceneManager.LoadScene(m_LobySceneName);
+            yield return null;
+        }
+    }
+    
 }

@@ -15,12 +15,7 @@ public class WaitManager : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
-        if (!PhotonNetwork.InRoom)
-            return;
-
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LeaveLobby();
-        SceneManager.LoadScene("Lobby");
+        StartCoroutine(Coroutine_LeaveRoom());
     }
 
     public void CanLoadLevel()
@@ -37,9 +32,7 @@ public class WaitManager : MonoBehaviourPunCallbacks
 
     public void LoadLevel(float waitTime)
     {
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        StartCoroutine(Loading(waitTime));
+        StartCoroutine(Coroutine_LoadLevel(waitTime));
     }
 
     public IEnumerator Loading(float waitTime)
@@ -70,5 +63,25 @@ public class WaitManager : MonoBehaviourPunCallbacks
     private void FixedUpdate()
     {
         UpdateUI();
+    }
+
+    private IEnumerator Coroutine_LeaveRoom(){
+        yield return new WaitForSeconds(0.25f);
+        if (!PhotonNetwork.InRoom)
+            yield return null;
+        else{
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
+            SceneManager.LoadScene("Lobby");
+            yield return null;
+        }
+    }
+
+    private IEnumerator Coroutine_LoadLevel(float waitTime){
+        yield return new WaitForSeconds(0.25f);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        StartCoroutine(Loading(waitTime));
+        yield return null;
     }
 }

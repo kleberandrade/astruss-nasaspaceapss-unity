@@ -1,6 +1,7 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -36,7 +37,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.InLobby)
             return;
-
+        
         if (m_RoomNameInputField.text != string.Empty)
         {
             PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
@@ -156,4 +157,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsVisible = true;
         }
     }
+    
 }

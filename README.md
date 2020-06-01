@@ -24,6 +24,10 @@ Most of the tools we used were chosen because the team already had some experien
     <img src="https://github.com/kleberandrade/astruss-nasaspaceapss-unity/blob/master/Figures/mockup.png" width="800"/>
 </p>
 
+## Video
+
+- [https://www.youtube.com/watch?v=_HE93Yk63Ic](https://www.youtube.com/watch?v=_HE93Yk63Ic)
+
 ## Team
 
 - Kleber de Oliveira Andrade

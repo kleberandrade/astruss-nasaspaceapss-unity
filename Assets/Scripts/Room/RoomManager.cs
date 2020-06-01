@@ -35,7 +35,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        StartCoroutine(Coroutine_CreateRoom());
+        if (!PhotonNetwork.InLobby)
+            return;
+        
+        if (m_RoomNameInputField.text != string.Empty)
+        {
+            PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
+            PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
+            PlayerPrefs.Save();
+
+            RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
+            PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
+            SceneManager.LoadScene(m_LobySceneName);
+        }
     }
 
     public void ClearRoomList()
@@ -143,23 +155,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.CurrentRoom.IsOpen = true;
             PhotonNetwork.CurrentRoom.IsVisible = true;
-        }
-    }
-
-    private IEnumerator Coroutine_CreateRoom(){
-        yield return new WaitForSeconds(0.25f);
-        if (!PhotonNetwork.InLobby)
-            yield return null;
-        else if (m_RoomNameInputField.text != string.Empty)
-        {
-            PlayerPrefs.SetString(m_CreateChannelNamePrefs, m_RoomNameInputField.text);
-            PlayerPrefs.SetString(m_ChannelNamePrefs, m_RoomNameInputField.text);
-            PlayerPrefs.Save();
-
-            RoomOptions option = new RoomOptions { MaxPlayers = m_MaxPlayers };
-            PhotonNetwork.CreateRoom(m_RoomNameInputField.text, option);
-            SceneManager.LoadScene(m_LobySceneName);
-            yield return null;
         }
     }
     

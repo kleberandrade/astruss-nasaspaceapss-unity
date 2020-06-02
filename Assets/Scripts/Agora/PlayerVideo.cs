@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using agora_gaming_rtc;
+﻿using agora_gaming_rtc;
 using UnityEngine;
 
 public class PlayerVideo : MonoBehaviour

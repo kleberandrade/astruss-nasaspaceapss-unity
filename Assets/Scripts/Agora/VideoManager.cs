@@ -35,14 +35,6 @@ public class VideoManager : MonoBehaviour
         JoinChannel();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            LeaveChannel();
-        }
-    }
-
     private void JoinChannel()
     {
         _mrRtcEngine.EnableVideoObserver();
@@ -102,5 +94,15 @@ public class VideoManager : MonoBehaviour
         var playerVideo = playerVideos[uid];
         playerVideo.Clear();
         Destroy(playerVideo.gameObject);
+    }
+
+    private void OnDisable()
+    {
+        LeaveChannel();
+    }
+
+    private void OnApplicationQuit()
+    {
+        LeaveChannel();
     }
 }

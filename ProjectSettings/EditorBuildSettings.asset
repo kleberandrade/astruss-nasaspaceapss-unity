@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/QuibaoCamera/Testing.unity
+    guid: e808e1a978d9f74428e66d2531975d76
+  - enabled: 1
     path: Assets/Scenes/Intro.unity
     guid: 16f900794a05b4d4a9a64a2863a9cb7b
   - enabled: 1
